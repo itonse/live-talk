@@ -1,5 +1,6 @@
 package com.itonse.livetalk.domain.repository.entity;
 
+import com.itonse.livetalk.security.Hasher;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,4 +21,15 @@ public class UserCredentials {
 
     @Column(nullable = false)
     private String hashed_password;
+
+    private UserCredentials(String password, User user) {
+        this.hashed_password = password;
+        this.user = user;
+    }
+
+    public static UserCredentials newCredentials(String password, User user) {
+        String hashedValue = Hasher.getHashingValue(password);
+
+        return new UserCredentials(hashedValue, user);
+    }
 }

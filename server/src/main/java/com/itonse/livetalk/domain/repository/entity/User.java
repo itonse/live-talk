@@ -1,17 +1,14 @@
 package com.itonse.livetalk.domain.repository.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "t_id")
 @Table(name = "users")
 public class User {
 
@@ -27,6 +24,15 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserCredentials userCredentials;
+
+    private User(String name) {
+        this.name = name;
+        this.created_at = new Timestamp(System.currentTimeMillis());
+    }
+
+    public static User newUser(String name) {
+        return new User(name);
+    }
 
     public void setCredentials(UserCredentials credentials) {
         this.userCredentials = credentials;
